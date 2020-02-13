@@ -3,9 +3,13 @@ import { put, takeLatest } from 'redux-saga/effects';
 import ajax from '../apis';
 
 function* fetchNews() {
-  const json = yield ajax();
+  try {
+    const json = yield ajax();
 
-  yield put({ type: "NEWS_RECEIVED", json: json.articles || [{ error: json.message }] });
+    yield put({type: "GET_NEWS_SUCCESS", json: json.articles});
+  } catch (e) {
+    yield put({type: "GET_NEWS_FAILURE", message: e.message});
+  }
 }
 
 function* fetchNewsWatcher() {
